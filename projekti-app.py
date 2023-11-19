@@ -2,44 +2,46 @@ import os
 import click
 import yaml
 
-CONFIG_DIR = os.path.expanduser('~/.config/prjkt')
-CONFIG_FILE = os.path.join(CONFIG_DIR, 'config.yml')
-PROJECTS_DIR = os.path.join(CONFIG_DIR, 'projects')
-TEMPLATES_DIR = os.path.join(CONFIG_DIR, 'templates')
+CONFIG_DIR_DEFAULT = os.path.expanduser('~/.config/prjkt')
 
 @click.group()
 def cli():
     pass
 
 @cli.command()
-@cli.command()
 def init():
     """Initialize prjkt configuration"""
+    
+    config_dir = click.prompt('Provide prjkt config directory. If left blank it defaults to ~/.config/prjkt', default=CONFIG_DIR_DEFAULT)
+    
+    CONFIG_DIR = os.path.expanduser(config_dir)
+    CONFIG_FILE = os.path.join(CONFIG_DIR, 'config.yml')
+    PROJECTS_DIR = os.path.join(CONFIG_DIR, 'projects')
+    TEMPLATES_DIR = os.path.join(CONFIG_DIR, 'templates')
+    
     os.makedirs(CONFIG_DIR, exist_ok=True)
     os.makedirs(TEMPLATES_DIR, exist_ok=True)
+    os.makedirs(PROJECTS_DIR, exist_ok=True)
     
-    # Create default config
-    default_config = {'projects_dir': PROJECTS_DIR}
+    base_config = {
+    'version': '1.0.0',
+    'prjkt_config_dir': CONFIG_DIR,
+    'prjkt_projects_dir': PROJECTS_DIR,
+    'prjkt_templates_dir': TEMPLATES_DIR
+    }
+
     with open(CONFIG_FILE, 'w') as f:
-        yaml.dump(default_config, f)
+        yaml.dump(base_config, f)
 
-    # Create template files
-    with open(os.path.join(TEMPLATES_DIR, 'project-config-template.yml'), 'w') as f:
-        f.write("""# This is a template for project configuration
-    version: 1.0.0
-    base_dir: ~/.config/prjkt
-    projects_dir: ~/.config/prjkt/projects
-    templates_dir: ~/.config/prjkt/templates
+    project_config = {
+    'version': 'project_version',
+    'prjkt_config_dir': CONFIG_DIR,
+    'prjkt_projects_dir': PROJECTS_DIR,
+    'prjkt_templates_dir': TEMPLATES_DIR
+    }
 
-    default_template: base
-
-    cli:
-    colors: true
-    output: text   # 'text' or 'json'
-
-    # Command to use for running scripts
-    run_command: bash 
-    """)
+    with open(os.path.join(TEMPLATES_DIR, 'project-config.yml'), 'w') as f:
+        yaml.dump(project_config, f)
 
     with open(os.path.join(TEMPLATES_DIR, 'start.sh'), 'w') as f:
         f.write("""#!/usr/bin/env bash
