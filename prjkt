@@ -24,7 +24,7 @@ def cli():
     pass
 
 @click.command()
-@click.option('-c', '--config-dir', default=CONFIG_DIR_DEFAULT, help='Set a custom location for the prjkt config directory, default is ~/.config/prjkt if not set')
+@click.option('-c', '--config-dir', default=CONFIG_DIR_DEFAULT, help='Set a custom location for the prjkt config directory, default is ~/.config/prjkt if not set', required=False)
 def init(config_dir):
 
     
@@ -33,7 +33,7 @@ def init(config_dir):
     config_dir = click.prompt('Provide prjkt config directory This should be the full path. If left blank it defaults to ~/.config/prjkt', default=config_dir)
    
     CONFIG_DIR = os.path.expanduser(config_dir)
-    CONFIG_FILE = os.path.join(CONFIG_DIR, 'config.yml')
+    CONFIG_FILE = os.path.join(CONFIG_DIR, 'prjkt-config.json')
     PROJECTS_DIR = os.path.join(CONFIG_DIR, 'projects')
     TEMPLATES_DIR = os.path.join(CONFIG_DIR, 'templates')
     
@@ -48,8 +48,12 @@ def init(config_dir):
     'prjkt_templates_dir': TEMPLATES_DIR
     }
 
-    with open(CONFIG_FILE, 'w') as f:
-        yaml.dump(base_config, f)
+    with open(os.path.join(CONFIG_DIR, CONFIG_FILE), 'w') as f:
+        json.dump(base_config, f, indent=4)
+
+
+    # with open(CONFIG_FILE, 'w') as f:
+    #     yaml.dump(base_config, f)
     
     click.echo("prjkt initialized!")
     check_editor()
@@ -150,9 +154,12 @@ def list_projects():
 
     # For each project, load the projects-config.yaml file and get the project name, version, and tags
     for project in projects:
-        with open(os.path.join(PROJECTS_DIR, project, 'project-config.yml')) as f:
-            data = yaml.safe_load(f)
-            table.add_row(data['project_name'], data['version'], ', '.join(data['project_tags']))
+        with open(os.path.join(PROJECTS_DIR, project, 'project-config.json')) as f:
+            project_config = json.load(f)
+            project_name = project_config['project_name']
+            project_version = project_config['version']
+            project_tags = ', '.join(project_config['project_tags'])
+            table.add_row(project_name, project_version, project_tags)
 
     # Print the table
     console = Console()
