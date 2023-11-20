@@ -1,8 +1,18 @@
+#!/usr/bin/env python3
 import os
 import click
 import yaml
 
-CONFIG_DIR_DEFAULT = os.path.expanduser('~/.config/prjkt')
+# used for testing
+CONFIG_DIR_DEFAULT = os.path.expanduser('~/tmp/projekti-testing-dir')
+#CONFIG_DIR_DEFAULT = os.path.expanduser('~/.config/prjkt')
+
+def check_editor():
+    # Checking if EDITOR environment variable is set
+    if os.environ.get('EDITOR') is None:
+        print("EDITOR is not set.")
+        print("You will not be able to add, copy or edit projects.")
+        print("Please set EDITOR environment variable to your preferred editor.")
 
 @click.group()
 def cli():
@@ -10,9 +20,11 @@ def cli():
 
 @cli.command()
 def init():
+
+    check_editor()
     """Initialize prjkt configuration"""
     
-    config_dir = click.prompt('Provide prjkt config directory. If left blank it defaults to ~/.config/prjkt', default=CONFIG_DIR_DEFAULT)
+    config_dir = click.prompt('Provide prjkt config directory This should be the full path. If left blank it defaults to ~/.config/prjkt', default=CONFIG_DIR_DEFAULT)
     
     CONFIG_DIR = os.path.expanduser(config_dir)
     CONFIG_FILE = os.path.join(CONFIG_DIR, 'config.yml')
@@ -46,8 +58,8 @@ def init():
     with open(os.path.join(TEMPLATES_DIR, 'start.sh'), 'w') as f:
         f.write("""#!/usr/bin/env bash
 
-    # This script will be invoked when starting the project
-    # Add any start logic here
+    # This script will be invoked when starting the project. This can be used to activate virtualenvs, change in to a directory, etc.
+    # Command line arguments can be used, $3 would be the first argument after your project name.
 
     echo "Starting project"
     """)
