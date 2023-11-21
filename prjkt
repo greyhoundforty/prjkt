@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 import os
 import click
-import yaml
 import json
 import platform
 import datetime
 import shlex
 import stat
-from rich.table import Table
+from rich import print as rprint
+from rich.json import JSON
 from rich.console import Console
-
+from rich.table import Table
 
 CONFIG_DIR_DEFAULT = os.path.expanduser('~/.config/prjkt')
 
@@ -92,9 +92,13 @@ def define_project(project_name, version, tags, metadata):
             'python_version': platform.python_version(),
             'config_written_at': datetime.datetime.now().isoformat()
         }
-    
+    console = Console()
+    console.print(JSON(base_config))
+
     with open(os.path.join(PROJECT_DIR, 'project-config.json'), 'w') as f:
         json.dump(base_config, f, indent=4)
+
+    console.print(":building_construction: Project has been defined!")
 
     with open(os.path.join(PROJECT_DIR, 'start.sh'), 'w') as f:
         f.write("""#!/usr/bin/env bash
