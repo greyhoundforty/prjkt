@@ -66,7 +66,17 @@ cli.add_command(init)
 @click.option('-t', '--tags', required=False, help='Tags for the project, comma separated', default = [])
 @click.option('-m', '--metadata', required=False, is_flag=True, help='Add metadata to project-config.json. This collects the OS, python version, and project creation time.' )
 def define_project(project_name, version, tags, metadata):
-    """Define a new project"""
+    """Define a new project
+    
+    Args:
+        project_name (str): The name of the project.
+
+        version (str): The version of the project. Defaults to "0.0.1".
+        
+        tags (str): Tags for the project, comma separated.
+        
+        metadata (bool): Add metadata to project-config.json. This collects the OS, python version, and project creation time.
+    """
     # Convert project_name to lowercase and replace spaces with hyphens
     project_name = project_name.lower().replace(' ', '-')
     
