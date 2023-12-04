@@ -1,4 +1,4 @@
-#  projekti
+#  prjkt
 
 A [prm](https://github.com/EivindArvesen/prm) like utility but built in python. This is mainly a learning project for me, but if you find it usefull, please feel free to use it. If you hit a bug or have a feature request, please open an issue. I am not a developer by trade, so I am sure there are many things that could be done better.
 
