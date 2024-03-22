@@ -15,6 +15,10 @@
 # limitations under the License.
 #
 
+import os
+import json
+import click
+
 CONFIG_DIR_DEFAULT = os.path.expanduser('~/.config/prjkt')
 
 def check_editor():
