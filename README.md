@@ -17,3 +17,5 @@ Use the `prjkt define` command to define/create a new ==project==. This will cre
 ```shell
 prjkt define PROJECT_NAME --template GITHUBUSER/REPO [OPTIONS]
 ```
+
+## New
