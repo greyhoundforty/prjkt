@@ -1,0 +1,13 @@
+#taskfile definition
+version: '3'
+
+tasks:
+  hello:
+    cmds:
+      - echo 'Hello World from Task!'
+    silent: true
+
+  greet:
+    dotenv: ['.env']
+    cmds:
+      - echo "Using $KEYNAME and endpoint $ENDPOINT"

@@ -25,5 +25,3 @@ def get_gitignore(language, project_dir):
   
 if __name__ == '__main__':
   get_gitignore()
-
-
